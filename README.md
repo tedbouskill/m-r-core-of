@@ -25,3 +25,11 @@ After watching an organization build a live production site using the original s
   * CQRS
 * Implement a realistic Inventory Tracking service
 * Create GitHub Tags to track different versions
+
+## GitHub Version Tags
+
+The following section lists the GitHub Tags and the state of the application in the versions
+
+### Version1
+
+First version of Inventory controller directly consuming a DbContext that is using a SQLite local DB for storage
