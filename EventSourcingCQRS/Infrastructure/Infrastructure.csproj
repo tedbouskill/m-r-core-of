@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DomainCore\DomainCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Data\Interfaces\IInventoryEventRepository.cs" />
+    <Compile Remove="Data\Interfaces\IInventoryReadRepository.cs" />
+    <Compile Remove="Data\Interfaces\IInventoryRepository.cs" />
+    <Compile Remove="Data\Interfaces\IInventoryWriteRepository.cs" />
+    <Compile Remove="Data\InventoryEventRepository.cs" />
+    <Compile Remove="Data\InventoryReadRepository.cs" />
+    <Compile Remove="Data\InventoryRepository.cs" />
+    <Compile Remove="Data\InventoryWriteRepository.cs" />
+    <Compile Remove="Events\Interfaces\IEventBusService.cs" />
+    <Compile Remove="Events\Interfaces\IInventoryEventBusService.cs" />
+    <Compile Remove="Events\EventBusService.cs" />
+    <Compile Remove="Events\InventoryEventBusService.cs" />
+  </ItemGroup>
+</Project>
