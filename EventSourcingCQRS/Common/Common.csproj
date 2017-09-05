@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="CQRS\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="EventSourcing\Aggregate.cs" />
+    <Compile Remove="EventSourcing\EventData.cs" />
+    <Compile Remove="EventSourcing\EventModel.cs" />
+    <Compile Remove="EventSourcing\IAggregate.cs" />
+    <Compile Remove="EventSourcing\IEventStore.cs" />
+    <Compile Remove="CQRS\Command.cs" />
+    <Compile Remove="CQRS\ICommandHandler.cs" />
+  </ItemGroup>
+</Project>
