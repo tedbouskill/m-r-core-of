@@ -42,3 +42,9 @@ It was intentionally kept very simple to mimic common practices in many companie
 In this version, the goal was to demonstrate a solution that met the requirements for CQRS using a MVC controller as the command handler and implementing a InventoryRepository that had the capability of reading and writing from two different data stores. An Onion Framework project structure was added.  The WebApp is only connected with an Application and DomainCore project. The Infrastructure project is now only accessed via the Application project to implement access to the data stores.
 
 This solution would work in production if there were two data stores configured in a master/slave relationship with the master used for writes and the slave for reads.  There is no Event Sourcing and because there is not an Actor Concurrency Model the last update event will win if a delete event hadn't happened first.
+
+### Version3
+
+This version includes an event table to track all events affecting inventory items.  It is not a full event sourcing implementation because it does not have the capability to rebuild an inventory items state using an aggregate service.
+
+It could be used as a solution in production if a company only requires an audit trail for investigative or reporting purposes.

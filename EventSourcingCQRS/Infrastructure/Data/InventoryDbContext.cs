@@ -12,5 +12,13 @@ public class InventoryDbContext : DbContext
 	{
     }
 
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.Entity<DomainCore.InventoryItemEvent>()
+                    .HasKey(o => new { o.AggregateKey, o.TimeStamp });
+	}
+
 	public DbSet<DomainCore.InventoryItem> InventoryItems { get; set; }
+
+    public DbSet<DomainCore.InventoryItemEvent> InventoryEventItems { get; set; }
 }

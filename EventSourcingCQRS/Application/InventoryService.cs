@@ -10,10 +10,12 @@ namespace Application
     public class InventoryService : Interfaces.IInventoryService
     {
         private IInventoryRepository _inventoryRepository;
+        private IInventoryEventRepository _inventoryEventRepository;
 
-        public InventoryService(IInventoryRepository inventoryRepository)
+        public InventoryService(IInventoryRepository inventoryRepository, IInventoryEventRepository inventoryEventRepository)
         {
             _inventoryRepository = inventoryRepository;
+            _inventoryEventRepository = inventoryEventRepository;
         }
 
 		public async Task<IEnumerable<InventoryItem>> InventoryAsync()
@@ -28,17 +30,56 @@ namespace Application
 
         public async Task PostItemAsync(InventoryItem item)
 		{
-            await _inventoryRepository.AddAsync(item);
+            await Task.WhenAll(
+                _inventoryEventRepository.AppendEvent(
+                        item.Id,
+                        new InventoryItemEvent()
+                        {
+                            AggregateKey = item.Id,
+                            TimeStamp = DateTime.UtcNow,
+                            Event = "CreateInventoryItem",
+                            EventObjTypeName = "InventoryItem",
+                            EventObjJson = Newtonsoft.Json.JsonConvert.SerializeObject(item)
+                        }
+                    ),
+                _inventoryRepository.AddAsync(item)
+            );
 		}
 
         public async Task PutItemAsync(InventoryItem item)
         {
-            await _inventoryRepository.UpdateAsync(item);
+            await Task.WhenAll(
+                _inventoryEventRepository.AppendEvent(
+                        item.Id,
+                        new InventoryItemEvent()
+                        {
+                            AggregateKey = item.Id,
+                            TimeStamp = DateTime.UtcNow,
+                            Event = "UpdateFullInventoryItem",
+                            EventObjTypeName = "InventoryItem",
+                            EventObjJson = Newtonsoft.Json.JsonConvert.SerializeObject(item)
+                        }
+                    ),
+                _inventoryRepository.UpdateAsync(item)
+            );
         }
 
 		public async Task DeleteItemAsync(Guid id)
 		{
-            await _inventoryRepository.DeleteAsync(id);
+            await Task.WhenAll(
+                _inventoryEventRepository.AppendEvent(
+                        id,
+                        new InventoryItemEvent()
+                        {
+                            AggregateKey = id,
+                            TimeStamp = DateTime.UtcNow,
+                            Event = "DeleteInventoryItem",
+                            EventObjTypeName = "Guid",
+                            EventObjJson = Newtonsoft.Json.JsonConvert.SerializeObject(id)
+                        }
+                    ),
+                _inventoryRepository.DeleteAsync(id)
+            );
 		}
 
 		public Task PatchItemCountAsync(Guid id, int count, string reason)

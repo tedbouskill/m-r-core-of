@@ -16,6 +16,8 @@ namespace Application
 			services.AddDbContext<InventoryDbContext>(options =>
 					options.UseSqlite("Data Source=./inventory.sqlite"));
 
+            services.AddTransient<IInventoryEventRepository, InventoryEventRepository>();
+
 			services.AddTransient<IInventoryReadRepository, InventoryReadRepository>();
 			services.AddTransient<IInventoryWriteRepository, InventoryWriteRepository>();
 
