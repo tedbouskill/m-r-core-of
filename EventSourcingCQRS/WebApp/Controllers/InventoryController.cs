@@ -3,23 +3,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using DomainCore;
-using Infrastructure;
+
+using Application.Interfaces;
 
 namespace WebApp.Controllers
 {
     public class InventoryController : Controller
     {
-        private readonly InventoryDbContext _context;
+        private IInventoryService _inventoryService;
 
-        public InventoryController(InventoryDbContext context)
+        public InventoryController(IInventoryService inventoryService)
         {
-            _context = context;
+            _inventoryService = inventoryService;
         }
 
         // GET: Inventory
         public async Task<IActionResult> Index()
         {
-            return View(await _context.InventoryItems.ToListAsync());
+            return View(await _inventoryService.InventoryAsync());
         }
 
         // GET: Inventory/Details/5
@@ -30,8 +31,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var inventoryItem = await _context.InventoryItems
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var inventoryItem = await _inventoryService.GetItemAsync(id.Value);
+                
             if (inventoryItem == null)
             {
                 return NotFound();
@@ -57,10 +58,12 @@ namespace WebApp.Controllers
             {
                 inventoryItem.Id = Guid.NewGuid();
                 inventoryItem.LastEventTimestamp = DateTime.UtcNow;
-                _context.Add(inventoryItem);
-                await _context.SaveChangesAsync();
+
+                await _inventoryService.PostItemAsync(inventoryItem);
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(inventoryItem);
         }
 
@@ -72,11 +75,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var inventoryItem = await _context.InventoryItems.SingleOrDefaultAsync(m => m.Id == id);
-            if (inventoryItem == null)
+			var inventoryItem = await _inventoryService.GetItemAsync(id.Value);
+
+			if (inventoryItem == null)
             {
                 return NotFound();
             }
+
             return View(inventoryItem);
         }
 
@@ -94,22 +99,8 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(inventoryItem);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InventoryItemExists(inventoryItem.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _inventoryService.PutItemAsync(inventoryItem);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(inventoryItem);
@@ -123,8 +114,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var inventoryItem = await _context.InventoryItems
-                .SingleOrDefaultAsync(m => m.Id == id);
+			var inventoryItem = await _inventoryService.GetItemAsync(id.Value);
+			
             if (inventoryItem == null)
             {
                 return NotFound();
@@ -138,15 +129,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var inventoryItem = await _context.InventoryItems.SingleOrDefaultAsync(m => m.Id == id);
-            _context.InventoryItems.Remove(inventoryItem);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _inventoryService.DeleteItemAsync(id);
 
-        private bool InventoryItemExists(Guid id)
-        {
-            return _context.InventoryItems.Any(e => e.Id == id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
