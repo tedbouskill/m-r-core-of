@@ -18,10 +18,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Data\Interfaces\IInventoryEventRepository.cs" />
+    <Compile Remove="Data\InventoryEventRepository.cs" />
     <Compile Remove="Events\Interfaces\IEventBusService.cs" />
     <Compile Remove="Events\Interfaces\IInventoryEventBusService.cs" />
     <Compile Remove="Events\EventBusService.cs" />
     <Compile Remove="Events\InventoryEventBusService.cs" />
-    <Compile Remove="Data\InventoryEventRepository.cs" />
   </ItemGroup>
 </Project>

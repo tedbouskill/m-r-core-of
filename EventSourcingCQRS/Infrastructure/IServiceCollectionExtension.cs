@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
-using Infrastructure.Data;
-using Infrastructure.Data.Interfaces;
-
 namespace Infrastructure
 {
 	public static class IServiceCollectionExtension
@@ -14,12 +11,7 @@ namespace Infrastructure
 			services.AddDbContext<InventoryDbContext>(options =>
 					options.UseSqlite("Data Source=./inventory.sqlite"));
 
-            services.AddTransient<IInventoryReadRepository, InventoryReadRepository>();
-			services.AddTransient<IInventoryWriteRepository, InventoryWriteRepository>();
-
-            services.AddTransient<IInventoryRepository, InventoryRepository>();
-
-			return services;
+            return services;
 		}
 	}
 }
