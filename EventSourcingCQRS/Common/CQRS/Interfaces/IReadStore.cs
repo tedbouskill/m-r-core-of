@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Common.CQRS
+namespace Common.CQRS.Interfaces
 {
     public interface IReadStore<KeyType, ModelType>
     {

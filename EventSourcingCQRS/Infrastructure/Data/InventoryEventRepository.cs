@@ -23,7 +23,7 @@ namespace Infrastructure.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<IModelEvent<Guid>>> Events(Guid aggregateKey)
+        public async Task<IEnumerable<IModelEvent<Guid>>> EventsAsync(Guid aggregateKey)
 		{
 			var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 			
@@ -43,7 +43,7 @@ namespace Infrastructure.Data
                               .ToListAsync();
 		}
 
-        public async Task<int> AppendEvent(IModelEvent<Guid> eventModel)
+        public async Task<int> AppendEventAsync(IModelEvent<Guid> eventModel)
         {
 			var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
@@ -61,7 +61,7 @@ namespace Infrastructure.Data
             return _dbContext.InventoryEventItems.Select(i => i.AggregateKey == eventModel.AggregateKey).Count();
         }
 
-        public Task<int> EventsCount(Guid aggregateKey)
+        public Task<int> EventsCountAsync(Guid aggregateKey)
         {
             throw new NotImplementedException();
         }

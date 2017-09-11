@@ -26,6 +26,7 @@ namespace DomainCore.EventData
 
         public override void ApplyEventData(IModelAggregate<Guid> model)
         {
-        }
+			throw new NotImplementedException();
+		}
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Common.CQRS
+namespace Common.CQRS.Interfaces
 {
     public interface IWriteStore<KeyType, ModelType>
     {

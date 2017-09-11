@@ -13,8 +13,8 @@ namespace DomainCore
 		public DateTime LastEventTimestamp { get; set; }
 
         public string Name { get; set; }
-        public bool IsActive { get; set; }
-        public int Count { get; set; }
+        public bool IsActive { get; set; } = false;
+        public int Count { get; set; } = 0;
         public string Note { get; set; }
     }
 }

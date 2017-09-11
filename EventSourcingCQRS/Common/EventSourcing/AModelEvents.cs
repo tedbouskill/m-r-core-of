@@ -26,7 +26,7 @@ namespace Common.EventSourcing
 
         public async Task<IEnumerable<IModelEvent<KeyT>>> EventsAsync()
         {
-            return await _eventStore.Events(_aggregateKey);
+            return await _eventStore.EventsAsync(_aggregateKey);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Common.EventSourcing
         /// <param name="eventModel">Event source model.</param>
         public async Task<int> AppendEventAsync(IModelEvent<KeyT> eventModel)
         {
-            return await _eventStore.AppendEvent(eventModel);
+            return await _eventStore.AppendEventAsync(eventModel);
         }
 
         /// <summary>

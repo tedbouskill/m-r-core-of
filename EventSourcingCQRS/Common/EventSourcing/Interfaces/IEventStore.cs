@@ -11,12 +11,12 @@ namespace Common.EventSourcing.Interfaces
     /// </summary>
     public interface IEventStore<KeyT>
     {
-        Task<int> EventsCount(KeyT aggregateKey);
+        Task<int> EventsCountAsync(KeyT aggregateKey);
 
-		//Task<IEnumerable<KeyT>> Keys();
+		//Task<IEnumerable<KeyT>> AllKeysSync();
 
-		Task<IEnumerable<IModelEvent<KeyT>>> Events(KeyT aggregateKey);
+		Task<IEnumerable<IModelEvent<KeyT>>> EventsAsync(KeyT aggregateKey);
 
-        Task<int> AppendEvent(IModelEvent<KeyT> eventModel);
+        Task<int> AppendEventAsync(IModelEvent<KeyT> eventModel);
     }
 }

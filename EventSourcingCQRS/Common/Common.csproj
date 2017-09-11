@@ -7,10 +7,9 @@
   <ItemGroup>
     <Folder Include="CQRS\" />
     <Folder Include="EventSourcing\Interfaces\" />
+    <Folder Include="CQRS\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="CQRS\Command.cs" />
-    <Compile Remove="CQRS\ICommandHandler.cs" />
     <Compile Remove="EventSourcing\ModelEvent.cs" />
     <Compile Remove="EventSourcing\AModelEventData.cs" />
   </ItemGroup>
