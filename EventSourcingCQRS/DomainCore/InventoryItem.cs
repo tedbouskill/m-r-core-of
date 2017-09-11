@@ -3,12 +3,11 @@ using DomainCore.Interfaces;
 
 namespace DomainCore
 {
+    /// <summary>
+    /// Represents an inventory item's current state
+    /// </summary>
     public class InventoryItem : Interfaces.IInventoryItem
     {
-		/// <summary>
-		/// Unique Id representing a SKU and a location
-		/// </summary>
-		/// <value>The identifier.</value>
 		public Guid Id { get; set; }
 
 		public DateTime LastEventTimestamp { get; set; }

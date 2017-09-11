@@ -1,7 +1,10 @@
 ﻿using System;
 namespace DomainCore
 {
-    public class InventoryItemData : Interfaces.IInventoryItemData
+	/// <summary>
+	/// Mutable inventory model data that can be changed by user events
+	/// </summary>
+	public class InventoryItemData : Interfaces.IInventoryItemData
     {
 		public string Name { get; set; }
 		public bool IsActive { get; set; }
