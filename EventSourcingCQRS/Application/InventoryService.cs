@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
+using Application.Interfaces;
+
+using Common.EventSourcing.Interfaces;
+
 using DomainCore;
+using DomainCore.EventData;
+
 using Infrastructure.Data.Interfaces;
 
 namespace Application
 {
-    public class InventoryService : Interfaces.IInventoryService
+    public class InventoryService : IInventoryService
     {
         private IInventoryRepository _inventoryRepository;
         private IInventoryEventRepository _inventoryEventRepository;
@@ -28,18 +35,28 @@ namespace Application
             return await _inventoryRepository.ItemAsync(id);
 		}
 
-        public async Task PostItemAsync(InventoryItem item)
+        public async Task<IEnumerable<InventoryItemEvent>> InventoryEventsAsync(Guid id)
+        {
+			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, id);
+
+            var result = iie.EventsAsync().Result.Cast<InventoryItemEvent>();
+
+            return await Task.FromResult(result);
+                            //.ContinueWith<IEnumerable<InventoryItemEvent>>(t => (IEnumerable<InventoryItemEvent>)t);
+		}
+
+		public async Task PostItemAsync(InventoryItem item)
 		{
+            InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, item.Id);
+
             await Task.WhenAll(
-                _inventoryEventRepository.AppendEvent(
-                        item.Id,
+                iie.AppendEventAsync(
                         new InventoryItemEvent()
                         {
                             AggregateKey = item.Id,
-                            TimeStamp = DateTime.UtcNow,
-                            Event = "CreateInventoryItem",
-                            EventObjTypeName = "InventoryItem",
-                            EventObjJson = Newtonsoft.Json.JsonConvert.SerializeObject(item)
+                            Timestamp = DateTime.UtcNow,
+                            EventName = "CreateInventoryItem",
+                            EventData = new UpsertInventoryItem(item)
                         }
                     ),
                 _inventoryRepository.AddAsync(item)
@@ -48,37 +65,37 @@ namespace Application
 
         public async Task PutItemAsync(InventoryItem item)
         {
-            await Task.WhenAll(
-                _inventoryEventRepository.AppendEvent(
-                        item.Id,
-                        new InventoryItemEvent()
-                        {
-                            AggregateKey = item.Id,
-                            TimeStamp = DateTime.UtcNow,
-                            Event = "UpdateFullInventoryItem",
-                            EventObjTypeName = "InventoryItem",
-                            EventObjJson = Newtonsoft.Json.JsonConvert.SerializeObject(item)
-                        }
-                    ),
-                _inventoryRepository.UpdateAsync(item)
+			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, item.Id);
+
+			await Task.WhenAll(
+				iie.AppendEventAsync(
+						new InventoryItemEvent()
+						{
+							AggregateKey = item.Id,
+							Timestamp = DateTime.UtcNow,
+							EventName = "UpdateInventoryItem",
+							EventData = new UpsertInventoryItem(item)
+						}
+					),
+				_inventoryRepository.UpdateAsync(item)
             );
         }
 
 		public async Task DeleteItemAsync(Guid id)
 		{
-            await Task.WhenAll(
-                _inventoryEventRepository.AppendEvent(
-                        id,
-                        new InventoryItemEvent()
-                        {
-                            AggregateKey = id,
-                            TimeStamp = DateTime.UtcNow,
-                            Event = "DeleteInventoryItem",
-                            EventObjTypeName = "Guid",
-                            EventObjJson = Newtonsoft.Json.JsonConvert.SerializeObject(id)
-                        }
-                    ),
-                _inventoryRepository.DeleteAsync(id)
+			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, id);
+
+			await Task.WhenAll(
+				iie.AppendEventAsync(
+						new InventoryItemEvent()
+						{
+							AggregateKey = id,
+							Timestamp = DateTime.UtcNow,
+							EventName = "DeleteInventoryItem",
+							EventData = null
+						}
+					),
+				_inventoryRepository.DeleteAsync(id)
             );
 		}
 

@@ -3,23 +3,27 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using DomainCore;
+
 namespace Application.Interfaces
 {
     public interface IInventoryService
     {
         /* ReadModel  */
         // Get all
-        Task<IEnumerable<DomainCore.InventoryItem>> InventoryAsync();
+        Task<IEnumerable<InventoryItem>> InventoryAsync();
 
         // Get one
-        Task<DomainCore.InventoryItem> GetItemAsync(Guid id);
+        Task<InventoryItem> GetItemAsync(Guid id);
 
-        /* Commands */
-        // Create Item
-        Task PostItemAsync(DomainCore.InventoryItem item);
+        Task<IEnumerable<InventoryItemEvent>> InventoryEventsAsync(Guid id);
+
+		/* Commands */
+		// Create Item
+		Task PostItemAsync(InventoryItem item);
 
         // Update Full Item
-		Task PutItemAsync(DomainCore.InventoryItem item);
+		Task PutItemAsync(InventoryItem item);
 
         // Delete Item
         Task DeleteItemAsync(Guid id);

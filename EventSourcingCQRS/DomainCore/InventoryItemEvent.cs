@@ -1,15 +1,14 @@
 ﻿using System;
 
+using Common.EventSourcing.Interfaces;
+
 namespace DomainCore
 {
-    public class InventoryItemEvent : Common.EventSourcing.EventModel
+    public class InventoryItemEvent : IModelEvent<Guid>
     {
-		/// <summary>
-		/// Unique Id representing a SKU and a location
-		/// </summary>
-		/// <value>The identifier.</value>
-		public Guid AggregateKey { get; set; }
-
-		public DateTime TimeStamp { get; set; }
-	}
+        public Guid AggregateKey { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string EventName { get; set; }
+        public IModelEventData<Guid> EventData { get; set; }
+    }
 }

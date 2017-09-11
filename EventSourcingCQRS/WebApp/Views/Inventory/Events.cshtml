@@ -1,0 +1,63 @@
+﻿@model Tuple<DomainCore.InventoryItem, IEnumerable<DomainCore.InventoryItemEvent>>
+
+@{
+    ViewData["Title"] = "Events";
+}
+<h2>Details</h2>
+
+<div>
+    <h4>InventoryItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Item1.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Item1.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Item1.IsActive)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Item1.IsActive)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Item1.Count)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Item1.Count)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Item1.Note)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Item1.Note)
+        </dd>
+    </dl>
+</div>
+
+<h2>Events</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Item2.First().EventName)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Item2) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => ((DomainCore.InventoryItemEvent)item).EventName)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

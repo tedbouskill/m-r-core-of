@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-using DomainCore;
-
 using Application.Interfaces;
+
+using DomainCore;
 
 namespace WebApp.Controllers
 {
@@ -23,8 +24,28 @@ namespace WebApp.Controllers
             return View(await _inventoryService.InventoryAsync());
         }
 
+		// GET: Inventory/Events/5
+		public async Task<IActionResult> Events(Guid? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var inventoryItem = await _inventoryService.GetItemAsync(id.Value);
+
+			if (inventoryItem == null)
+			{
+				return NotFound();
+			}
+
+            var inventoryItemEvents = await _inventoryService.InventoryEventsAsync(id.Value);
+
+            return View(new Tuple<InventoryItem,IEnumerable<DomainCore.InventoryItemEvent>>(inventoryItem, inventoryItemEvents));
+		}
+		
         // GET: Inventory/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+		public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {

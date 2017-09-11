@@ -19,7 +19,7 @@ namespace Infrastructure.Data
 
         public async Task Append(Guid key, InventoryItem model)
         {
-			_dbContext.Add(model);
+            _dbContext.InventoryItems.Add(model);
 
 			await _dbContext.SaveChangesAsync();
 		}
@@ -37,7 +37,7 @@ namespace Infrastructure.Data
         {
 			try
 			{
-				_dbContext.Update(model);
+                _dbContext.InventoryItems.Update(model);
 
 				await _dbContext.SaveChangesAsync();
 			}
