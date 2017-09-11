@@ -48,3 +48,9 @@ This solution would work in production if there were two data stores configured 
 This version includes an event table to track all events affecting inventory items.  It is not a full event sourcing implementation because it does not have the capability to rebuild an inventory items state using an aggregate service.
 
 It could be used as a solution in production if a company only requires an audit trail for investigative or reporting purposes.
+
+### Version4
+
+This version combines Event Sourcing and CQRS.  The command handlers will publish to the Event Store, then the Write Store concurrently.  It will always update the Write Store with the latest aggregate from the Event Store.
+
+__In Progress__
