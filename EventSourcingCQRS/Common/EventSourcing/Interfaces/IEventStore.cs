@@ -9,14 +9,14 @@ namespace Common.EventSourcing.Interfaces
     /// <summary>
     /// Stores model events for all models
     /// </summary>
-    public interface IEventStore<KeyT>
+    public interface IEventStore<IdT>
     {
-        Task<int> EventsCountAsync(KeyT aggregateKey);
+        Task<int> EventsCountAsync(IdT aggregateId);
 
-		//Task<IEnumerable<KeyT>> AllKeysSync();
+		//Task<IEnumerable<IdT>> AllIdsSync();
 
-		Task<IEnumerable<IModelEvent<KeyT>>> EventsAsync(KeyT aggregateKey);
+		Task<IEnumerable<IModelEvent<IdT>>> EventsAsync(IdT aggregateId);
 
-        Task<int> AppendEventAsync(IModelEvent<KeyT> eventModel);
+        Task<int> AppendEventAsync(IModelEvent<IdT> eventModel);
     }
 }

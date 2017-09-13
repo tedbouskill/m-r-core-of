@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 
 namespace Common.CQRS.Interfaces
 {
-    public interface IWriteStore<KeyType, ModelType>
+    public interface IWriteStore<IdType, ModelType>
     {
-        Task Append(KeyType key, ModelType model);
-        Task Delete(KeyType key);
-        Task Update(KeyType key, ModelType model);
+        Task AppendAsync(IdType id, ModelType model);
+        Task DeleteAsync(IdType id);
+        Task UpdateAsync(IdType id, ModelType model);
 	}
 }

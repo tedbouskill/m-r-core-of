@@ -23,18 +23,18 @@ namespace Infrastructure.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<IModelEvent<Guid>>> EventsAsync(Guid aggregateKey)
+        public async Task<IEnumerable<IModelEvent<Guid>>> EventsAsync(Guid aggregateId)
 		{
 			var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 			
             // Note: This doesn't execute the query so there is no impact on memory
             IQueryable<InventoryItemEventDto> items = _dbContext.InventoryEventItems.AsQueryable();
 
-            return await items.Where(i => i.AggregateKey == aggregateKey)
+            return await items.Where(i => i.AggregateId == aggregateId)
                               .Select(i =>  
                                       new InventoryItemEvent()
                                     {
-                                        AggregateKey = i.AggregateKey,
+                                        AggregateId = i.AggregateId,
                                         Timestamp = i.Timestamp,
                                         EventName = i.EventName,
                                         EventData = JsonConvert.DeserializeObject<IModelEventData<Guid>>(i.EventObjJson, settings)
@@ -49,7 +49,7 @@ namespace Infrastructure.Data
 
 		    await _dbContext.InventoryEventItems.AddAsync(
                     new InventoryItemEventDto() {
-                        AggregateKey = eventModel.AggregateKey,
+                        AggregateId = eventModel.AggregateId,
                         Timestamp = eventModel.Timestamp,
                         EventName = eventModel.EventName,
                         EventObjJson = JsonConvert.SerializeObject(eventModel.EventData, typeof(object), settings)
@@ -58,10 +58,10 @@ namespace Infrastructure.Data
 
             await _dbContext.SaveChangesAsync();
 
-            return _dbContext.InventoryEventItems.Select(i => i.AggregateKey == eventModel.AggregateKey).Count();
+            return _dbContext.InventoryEventItems.Select(i => i.AggregateId == eventModel.AggregateId).Count();
         }
 
-        public Task<int> EventsCountAsync(Guid aggregateKey)
+        public Task<int> EventsCountAsync(Guid aggregateId)
         {
             throw new NotImplementedException();
         }

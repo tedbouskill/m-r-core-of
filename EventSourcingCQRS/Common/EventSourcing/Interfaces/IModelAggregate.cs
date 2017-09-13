@@ -5,9 +5,9 @@ namespace Common.EventSourcing.Interfaces
 	/// <summary>
 	/// Represents the aggregate of the model's event data changes
 	/// </summary>
-	public interface IModelAggregate<KeyT>
+	public interface IModelAggregate<IdT>
 	{
-		KeyT AggregateKey { get; set; }
+		IdT AggregateId { get; set; }
 
 		int EventModelRow { get; set; }
 

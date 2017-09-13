@@ -9,8 +9,8 @@ namespace Application
 {
     public class InventoryItemEvents : AModelEvents<Guid>
     {
-        public InventoryItemEvents(IInventoryEventRepository eventStore, Guid aggregateKey)
-            : base(eventStore, aggregateKey)
+        public InventoryItemEvents(IInventoryEventRepository eventStore, Guid aggregateId)
+            : base(eventStore, aggregateId)
         {
         }
 

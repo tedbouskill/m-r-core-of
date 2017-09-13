@@ -7,7 +7,7 @@ namespace DomainCore
     /// </summary>
     public class InventoryItemEventDto
     {
-		public Guid AggregateKey { get; set; }
+		public Guid AggregateId { get; set; }
 
 		public DateTime Timestamp { get; set; }
 

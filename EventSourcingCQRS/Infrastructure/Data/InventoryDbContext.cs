@@ -14,12 +14,16 @@ public class InventoryDbContext : DbContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-        modelBuilder.Entity<DomainCore.InventoryItemEventDto>()
+		modelBuilder.Entity<DomainCore.InventoryItemDto>()
+					.ToTable("InventoryItems")
+                    .HasKey(o => new { o.Id });
+
+		modelBuilder.Entity<DomainCore.InventoryItemEventDto>()
                     .ToTable("InventoryItemEvents")
-                    .HasKey(o => new { o.AggregateKey, o.Timestamp });
+                    .HasKey(o => new { o.AggregateId, o.Timestamp });
 	}
 
-	public DbSet<DomainCore.InventoryItem> InventoryItems { get; set; }
+	public DbSet<DomainCore.InventoryItemDto> InventoryItems { get; set; }
 
     public DbSet<DomainCore.InventoryItemEventDto> InventoryEventItems { get; set; }
 }

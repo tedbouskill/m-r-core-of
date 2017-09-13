@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Threading.Tasks;
-
-using Common.EventSourcing;
 
 namespace Common.EventSourcing.Interfaces
 {
 	/// <summary>
 	/// Represents an event that affects a models state
 	/// </summary>
-    public interface IModelEvent<KeyT>
+    public interface IModelEvent<IdT>
     {
-		KeyT AggregateKey { get; set; }
+		IdT AggregateId { get; }
 
-		DateTime Timestamp { get; set; }
+		DateTime Timestamp { get; }
 
-		string EventName { get; set; }
+		string EventName { get; }
 
-        IModelEventData<KeyT> EventData { get; set; }
+        IModelEventData<IdT> EventData { get; }
 	}
 }

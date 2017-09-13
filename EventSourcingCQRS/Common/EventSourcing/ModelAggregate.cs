@@ -7,9 +7,9 @@ namespace Common.EventSourcing
 	/// <summary>
 	/// Represents the aggregate of the model's event data changes
 	/// </summary>
-    public class ModelAggregate<KeyT> : IModelAggregate<KeyT>
+    public class ModelAggregate<IdT> : IModelAggregate<IdT>
 	{
-		public KeyT AggregateKey { get; set; }
+		public IdT AggregateId { get; set; }
 
 		public int EventModelRow { get; set; }
 

@@ -4,9 +4,9 @@ using Common.CQRS.Interfaces;
 
 namespace Common.CQRS
 {
-    public class Command<KeyT, CommandDataT> : ICommand
+    public class Command<IdT, CommandDataT> : ICommand
     {
-        public readonly KeyT Key;
+        public readonly IdT Id;
 
         public readonly DateTime CommandTimestamp;
 
@@ -14,9 +14,9 @@ namespace Common.CQRS
 
         public readonly CommandDataT CommandData;
 
-        Command(KeyT key, DateTime commandTimestamp, string commandName, CommandDataT commandData)
+        Command(IdT id, DateTime commandTimestamp, string commandName, CommandDataT commandData)
         {
-            Key = key;
+            Id = id;
             CommandTimestamp = commandTimestamp;
             CommandName = commandName;
             CommandData = commandData;

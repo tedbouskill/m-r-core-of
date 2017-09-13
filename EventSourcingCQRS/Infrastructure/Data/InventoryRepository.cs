@@ -24,29 +24,29 @@ namespace Infrastructure.Data
             _writeRepository = writeRepository;
         }
 
-        public async Task<IEnumerable<InventoryItem>> InventoryAsync()
+        public async Task<IEnumerable<InventoryItemDto>> InventoryAsync()
         {
             return await _readRepository.AllAsync();
         }
 
-        public async Task<InventoryItem> ItemAsync(Guid id)
+        public async Task<InventoryItemDto> ItemAsync(Guid id)
         {
             return await _readRepository.ModelAsync(id);
         }
 
-        public async Task AddAsync(InventoryItem inventoryItem)
+        public async Task AddAsync(InventoryItemDto inventoryItem)
         {
-            await _writeRepository.Append(inventoryItem.Id, inventoryItem);
+            await _writeRepository.AppendAsync(inventoryItem.Id, inventoryItem);
         }
 		
-        public async Task UpdateAsync(InventoryItem inventoryItem)
+        public async Task UpdateAsync(InventoryItemDto inventoryItem)
 		{
-			await _writeRepository.Update(inventoryItem.Id, inventoryItem);
+			await _writeRepository.UpdateAsync(inventoryItem.Id, inventoryItem);
 		}
 
 		public async Task DeleteAsync(Guid id)
 		{
-            await _writeRepository.Delete(id);
+            await _writeRepository.DeleteAsync(id);
 		}
 	}
 }

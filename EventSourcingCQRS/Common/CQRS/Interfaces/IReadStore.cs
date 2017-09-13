@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace Common.CQRS.Interfaces
 {
-    public interface IReadStore<KeyType, ModelType>
+    public interface IReadStore<IdType, ModelType>
     {
         Task<IEnumerable<ModelType>> AllAsync();
 
-        Task<ModelType> ModelAsync(KeyType key);
+        Task<ModelType> ModelAsync(IdType id);
     }
 }
