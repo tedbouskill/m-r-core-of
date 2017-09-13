@@ -1,6 +1,5 @@
 ﻿using System;
 
-using Common.EventSourcing;
 using Common.EventSourcing.Interfaces;
 
 namespace DomainCore.EventData

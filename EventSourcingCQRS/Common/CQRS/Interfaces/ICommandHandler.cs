@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 
 namespace Common.CQRS.Interfaces
 {
     public interface ICommandHandler<ICommand>
     {
-        void Handle(ICommand command);
+        Task Handle(ICommand command);
     }
 }

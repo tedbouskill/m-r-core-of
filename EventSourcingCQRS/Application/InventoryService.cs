@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 using Application.Interfaces;
 
-using Common.EventSourcing.Interfaces;
-
 using DomainCore;
+using DomainCore.Commands;
 using DomainCore.EventData;
 
 using Infrastructure.Data.Interfaces;
@@ -16,23 +15,29 @@ namespace Application
 {
     public class InventoryService : IInventoryService
     {
-        private IInventoryRepository _inventoryRepository;
+        private IInventoryReadRepository _inventoryReadRepository;
         private IInventoryEventRepository _inventoryEventRepository;
+        private IInventoryCommandHandler _inventoryCommandHandler;
 
-        public InventoryService(IInventoryRepository inventoryRepository, IInventoryEventRepository inventoryEventRepository)
+        public InventoryService(
+            IInventoryReadRepository inventoryReadRepository,
+            IInventoryEventRepository inventoryEventRepository,
+            IInventoryCommandHandler inventoryCommandHandler
+        )
         {
-            _inventoryRepository = inventoryRepository;
+            _inventoryReadRepository = inventoryReadRepository;
             _inventoryEventRepository = inventoryEventRepository;
+            _inventoryCommandHandler = inventoryCommandHandler;
         }
 
-		public async Task<IEnumerable<InventoryItem>> InventoryAsync()
+		public async Task<IEnumerable<InventoryItemDto>> InventoryAsync()
 		{
-			return await _inventoryRepository.InventoryAsync();
+			return await _inventoryReadRepository.AllAsync();
 		}
 
-		public async Task<InventoryItem> GetItemAsync(Guid id)
+		public async Task<InventoryItemDto> GetItemAsync(Guid id)
 		{
-            return await _inventoryRepository.ItemAsync(id);
+            return await _inventoryReadRepository.ModelAsync(id);
 		}
 
         public async Task<IEnumerable<InventoryItemEvent>> InventoryEventsAsync(Guid id)
@@ -42,61 +47,21 @@ namespace Application
             var result = iie.EventsAsync().Result.Cast<InventoryItemEvent>();
 
             return await Task.FromResult(result);
-                            //.ContinueWith<IEnumerable<InventoryItemEvent>>(t => (IEnumerable<InventoryItemEvent>)t);
 		}
 
-		public async Task PostItemAsync(InventoryItem item)
+		public async Task PostItemAsync(InventoryItemDto item)
 		{
-            InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, item.Id);
-
-            await Task.WhenAll(
-                iie.AppendEventAsync(
-                        new InventoryItemEvent()
-                        {
-                            AggregateKey = item.Id,
-                            Timestamp = DateTime.UtcNow,
-                            EventName = "CreateInventoryItem",
-                            EventData = new UpsertInventoryItem(item)
-                        }
-                    ),
-                _inventoryRepository.AddAsync(item)
-            );
+            await _inventoryCommandHandler.Handle(new CreateInventoryItem(item));
 		}
 
-        public async Task PutItemAsync(InventoryItem item)
+        public async Task PutItemAsync(InventoryItemDto item)
         {
-			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, item.Id);
-
-			await Task.WhenAll(
-				iie.AppendEventAsync(
-						new InventoryItemEvent()
-						{
-							AggregateKey = item.Id,
-							Timestamp = DateTime.UtcNow,
-							EventName = "UpdateInventoryItem",
-							EventData = new UpsertInventoryItem(item)
-						}
-					),
-				_inventoryRepository.UpdateAsync(item)
-            );
-        }
+            await _inventoryCommandHandler.Handle(new UpdateInventoryItem(item));
+		}
 
 		public async Task DeleteItemAsync(Guid id)
 		{
-			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, id);
-
-			await Task.WhenAll(
-				iie.AppendEventAsync(
-						new InventoryItemEvent()
-						{
-							AggregateKey = id,
-							Timestamp = DateTime.UtcNow,
-							EventName = "DeleteInventoryItem",
-							EventData = null
-						}
-					),
-				_inventoryRepository.DeleteAsync(id)
-            );
+            await _inventoryCommandHandler.Handle(new DeleteInventoryItem(id));
 		}
 
 		public Task PatchItemCountAsync(Guid id, int count, string reason)
