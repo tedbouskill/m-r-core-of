@@ -6,7 +6,7 @@ namespace DomainCore
     /// <summary>
     /// Represents an inventory item's current state
     /// </summary>
-    public class InventoryItem : Interfaces.IInventoryItem
+    public class InventoryItemDto : Interfaces.IInventoryItem
     {
 		public Guid Id { get; set; }
 

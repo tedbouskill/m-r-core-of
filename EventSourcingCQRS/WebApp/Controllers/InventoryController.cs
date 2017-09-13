@@ -41,7 +41,7 @@ namespace WebApp.Controllers
 
             var inventoryItemEvents = await _inventoryService.InventoryEventsAsync(id.Value);
 
-            return View(new Tuple<InventoryItem,IEnumerable<DomainCore.InventoryItemEvent>>(inventoryItem, inventoryItemEvents));
+            return View(new Tuple<InventoryItemDto,IEnumerable<DomainCore.InventoryItemEvent>>(inventoryItem, inventoryItemEvents));
 		}
 		
         // GET: Inventory/Details/5
@@ -73,7 +73,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,IsActive,Count,Note")] InventoryItem inventoryItem)
+        public async Task<IActionResult> Create([Bind("Id,Name,IsActive,Count,Note")] InventoryItemDto inventoryItem)
         {
             if (ModelState.IsValid)
             {
@@ -111,7 +111,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,IsActive,Count,Note")] InventoryItem inventoryItem)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,IsActive,Count,Note")] InventoryItemDto inventoryItem)
         {
             if (id != inventoryItem.Id)
             {

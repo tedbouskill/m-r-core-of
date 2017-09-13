@@ -18,12 +18,12 @@ namespace Infrastructure.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<InventoryItem>> AllAsync()
+        public async Task<IEnumerable<InventoryItemDto>> AllAsync()
         {
             return await _dbContext.InventoryItems.ToListAsync();
         }
 
-        public async Task<InventoryItem> ModelAsync(Guid id)
+        public async Task<InventoryItemDto> ModelAsync(Guid id)
         {
 			return await _dbContext.InventoryItems.SingleOrDefaultAsync(m => m.Id == id);
         }
