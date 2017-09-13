@@ -17,23 +17,23 @@ namespace Infrastructure.Data
 			_dbContext = dbContext;
 		}
 
-        public async Task Append(Guid key, InventoryItem model)
+        public async Task AppendAsync(Guid id, InventoryItemDto model)
         {
             _dbContext.InventoryItems.Add(model);
 
 			await _dbContext.SaveChangesAsync();
 		}
 
-        public async Task Delete(Guid key)
+        public async Task DeleteAsync(Guid id)
         {
-            var inventoryItem = await _dbContext.InventoryItems.SingleOrDefaultAsync(m => m.Id == key);
+            var inventoryItem = await _dbContext.InventoryItems.SingleOrDefaultAsync(m => m.Id == id);
 
             _dbContext.InventoryItems.Remove(inventoryItem);
 			
             await _dbContext.SaveChangesAsync();
 		}
 
-        public async Task Update(Guid key, InventoryItem model)
+        public async Task UpdateAsync(Guid id, InventoryItemDto model)
         {
 			try
 			{
@@ -43,7 +43,7 @@ namespace Infrastructure.Data
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-                if (_dbContext.InventoryItems.Any(e => e.Id == key))
+                if (_dbContext.InventoryItems.Any(e => e.Id == id))
 				{
 					throw;
 				}
