@@ -11,19 +11,19 @@ namespace Application.Interfaces
     {
         /* ReadModel  */
         // Get all
-        Task<IEnumerable<InventoryItem>> InventoryAsync();
+        Task<IEnumerable<InventoryItemDto>> InventoryAsync();
 
         // Get one
-        Task<InventoryItem> GetItemAsync(Guid id);
+        Task<InventoryItemDto> GetItemAsync(Guid id);
 
         Task<IEnumerable<InventoryItemEvent>> InventoryEventsAsync(Guid id);
 
 		/* Commands */
 		// Create Item
-		Task PostItemAsync(InventoryItem item);
+		Task PostItemAsync(InventoryItemDto item);
 
         // Update Full Item
-		Task PutItemAsync(InventoryItem item);
+		Task PutItemAsync(InventoryItemDto item);
 
         // Delete Item
         Task DeleteItemAsync(Guid id);
