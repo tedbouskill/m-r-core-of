@@ -23,7 +23,9 @@ namespace Application
 
 			services.AddTransient<IInventoryRepository, InventoryRepository>();
 
-			services.AddTransient<IInventoryService, InventoryService>();
+            services.AddTransient<IInventoryCommandHandler, InventoryCommandHandler>();
+
+            services.AddTransient<IInventoryService, InventoryService>();
 
 			return services;
 		}
