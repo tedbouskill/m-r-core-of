@@ -30,7 +30,14 @@ namespace Application.Commands
 
         public override void ApplyEventData(IModelAggregate<Guid> model)
         {
-            throw new NotImplementedException();
-        }
+            CreateInventoryItemData eventData = ((CreateInventoryItemData)EventData);
+            ((InventoryItemAggregate)model).AggregateId = AggregateId;
+            ((InventoryItemAggregate)model).EventModelRow = 1;
+			((InventoryItemAggregate)model).LastEventTimestamp = Timestamp;
+            ((InventoryItemAggregate)model).Name = eventData.InventoryItemData.Name;
+            ((InventoryItemAggregate)model).Count = eventData.InventoryItemData.Count;
+            ((InventoryItemAggregate)model).IsActive = eventData.InventoryItemData.IsActive;
+			((InventoryItemAggregate)model).Note = eventData.InventoryItemData.Note;
+		}
     }
 }

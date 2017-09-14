@@ -28,7 +28,11 @@ namespace Application.Commands
 
         public override void ApplyEventData(IModelAggregate<Guid> model)
         {
-            throw new NotImplementedException();
-        }
+			((InventoryItemAggregate)model).LastEventTimestamp = Timestamp;
+            ((InventoryItemAggregate)model).Name = null;
+			((InventoryItemAggregate)model).Count = 0;
+            ((InventoryItemAggregate)model).IsActive = false;
+			((InventoryItemAggregate)model).Note = null;
+		}
     }
 }
