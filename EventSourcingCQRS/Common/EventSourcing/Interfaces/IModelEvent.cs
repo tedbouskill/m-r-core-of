@@ -13,6 +13,12 @@ namespace Common.EventSourcing.Interfaces
 
 		string EventName { get; }
 
-        IModelEventData<IdT> EventData { get; }
+        object EventData { get; }
+
+		/// <summary>
+		/// Will apply the change to the aggregate model
+		/// </summary>
+		/// <param name="model">Model.</param>
+		void ApplyEventData(IModelAggregate<IdT> model);
 	}
 }
