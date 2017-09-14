@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Common.EventSourcing.Interfaces;
+using DomainCore;
+using Infrastructure.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-
-using Infrastructure.Data.Interfaces;
-using DomainCore;
-
-using Common.EventSourcing;
-using Common.EventSourcing.Interfaces;
 
 namespace Infrastructure.Data
 {
@@ -31,15 +27,7 @@ namespace Infrastructure.Data
             IQueryable<InventoryItemEventDto> items = _dbContext.InventoryEventItems.AsQueryable();
 
             return await items.Where(i => i.AggregateId == aggregateId)
-                              .Select(i =>  
-                                      new InventoryItemEvent()
-                                    {
-                                        AggregateId = i.AggregateId,
-                                        Timestamp = i.Timestamp,
-                                        EventName = i.EventName,
-                                        EventData = JsonConvert.DeserializeObject<IModelEventData<Guid>>(i.EventObjJson, settings)
-                                    }
-                                 )
+                              .Select(i => JsonConvert.DeserializeObject<IModelEvent<Guid>>(i.EventObjJson, settings))
                               .ToListAsync();
 		}
 
@@ -52,7 +40,7 @@ namespace Infrastructure.Data
                         AggregateId = eventModel.AggregateId,
                         Timestamp = eventModel.Timestamp,
                         EventName = eventModel.EventName,
-                        EventObjJson = JsonConvert.SerializeObject(eventModel.EventData, typeof(object), settings)
+                        EventObjJson = JsonConvert.SerializeObject(eventModel, typeof(object), settings)
                     }
                 );
 
