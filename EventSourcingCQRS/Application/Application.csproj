@@ -18,6 +18,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
+    <Folder Include="Commands\" />
+    <Folder Include="EventData\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Interfaces\ICommandServices.cs" />
