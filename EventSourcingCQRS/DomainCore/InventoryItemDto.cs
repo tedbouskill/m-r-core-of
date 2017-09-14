@@ -1,5 +1,4 @@
 ﻿using System;
-using DomainCore.Interfaces;
 
 namespace DomainCore
 {
