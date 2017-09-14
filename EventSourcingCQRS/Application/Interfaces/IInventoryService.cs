@@ -4,13 +4,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DomainCore;
-using DomainCore.Interfaces;
 
 namespace Application.Interfaces
 {
-    /// <summary>
-    /// Primary application interface
-    /// </summary>
     public interface IInventoryService
     {
         /* ReadModel  */
@@ -20,7 +16,7 @@ namespace Application.Interfaces
         // Get one
         Task<InventoryItemDto> GetItemAsync(Guid id);
 
-        Task<IEnumerable<AInventoryItemEvent>> InventoryEventsAsync(Guid id);
+        Task<IEnumerable<InventoryItemEvent>> InventoryEventsAsync(Guid id);
 
 		/* Commands */
 		// Create Item
