@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Application.Commands;
+using Application.EventData;
 using Application.Interfaces;
+using Common.EventSourcing.Interfaces;
 using DomainCore;
-using DomainCore.Commands;
-using DomainCore.EventData;
-using Infrastructure.Data;
 using Infrastructure.Data.Interfaces;
 
 namespace Application
@@ -32,7 +32,7 @@ namespace Application
 			var eventData = ((CreateInventoryItemData)createInventoryItem.EventData).InventoryItemData;
 
             await Task.WhenAll(
-                iie.AppendEventAsync(createInventoryItem),
+                iie.AppendEventAsync((IModelEvent<Guid>)createInventoryItem),
                 _inventoryWriteRepository.AppendAsync(
                     createInventoryItem.AggregateId,
                     new InventoryItemDto()
@@ -52,7 +52,7 @@ namespace Application
             InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, deleteInventoryItem.AggregateId);
 
 			await Task.WhenAll(
-                iie.AppendEventAsync(deleteInventoryItem)
+                iie.AppendEventAsync((IModelEvent<Guid>)deleteInventoryItem)
                 ,_inventoryWriteRepository.DeleteAsync(deleteInventoryItem.AggregateId)
 			);
 		}
@@ -66,8 +66,8 @@ namespace Application
 			var eventData = ((UpdateInventoryItemData)updateInventoryItem.EventData).InventoryItemData;
 
 			await Task.WhenAll(
-                iie.AppendEventAsync(updateInventoryItem),
-				_inventoryWriteRepository.AppendAsync(
+                iie.AppendEventAsync((IModelEvent<Guid>)updateInventoryItem),
+                _inventoryWriteRepository.UpdateAsync(
 					updateInventoryItem.AggregateId,
 					new InventoryItemDto()
 					{
