@@ -1,5 +1,5 @@
-﻿using Common.CQRS.Interfaces;
-using DomainCore.Commands;
+﻿using Application.Commands;
+using Common.CQRS.Interfaces;
 
 namespace Application.Interfaces
 {
