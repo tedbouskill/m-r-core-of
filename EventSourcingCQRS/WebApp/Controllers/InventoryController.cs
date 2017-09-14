@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 
 using DomainCore;
+using DomainCore.Interfaces;
 
 namespace WebApp.Controllers
 {
@@ -41,7 +42,7 @@ namespace WebApp.Controllers
 
             var inventoryItemEvents = await _inventoryService.InventoryEventsAsync(id.Value);
 
-            return View(new Tuple<InventoryItemDto,IEnumerable<DomainCore.InventoryItemEvent>>(inventoryItem, inventoryItemEvents));
+            return View(new Tuple<InventoryItemDto,IEnumerable<AInventoryItemEvent>>(inventoryItem, inventoryItemEvents));
 		}
 		
         // GET: Inventory/Details/5

@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Application.Commands;
 using Application.Interfaces;
-
 using DomainCore;
-using DomainCore.Commands;
-using DomainCore.EventData;
-
+using DomainCore.Interfaces;
 using Infrastructure.Data.Interfaces;
 
 namespace Application
@@ -40,13 +37,13 @@ namespace Application
             return await _inventoryReadRepository.ModelAsync(id);
 		}
 
-        public async Task<IEnumerable<InventoryItemEvent>> InventoryEventsAsync(Guid id)
+        public async Task<IEnumerable<AInventoryItemEvent>> InventoryEventsAsync(Guid id)
         {
 			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, id);
 
-            var result = iie.EventsAsync().Result.Cast<InventoryItemEvent>();
+            var result = iie.EventsAsync().Result;
 
-            return await Task.FromResult(result);
+            return await Task.FromResult(result.Cast<AInventoryItemEvent>());
 		}
 
 		public async Task PostItemAsync(InventoryItemDto item)

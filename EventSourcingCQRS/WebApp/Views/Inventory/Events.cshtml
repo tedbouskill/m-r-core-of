@@ -1,4 +1,4 @@
-﻿@model Tuple<DomainCore.InventoryItemDto, IEnumerable<DomainCore.InventoryItemEvent>>
+﻿@model Tuple<DomainCore.InventoryItemDto, IEnumerable<DomainCore.AInventoryItemEvent>>
 
 @{
     ViewData["Title"] = "Events";
@@ -44,6 +44,9 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Item2.First().EventName)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Item2.First().EventData)
+                </th>
             <th></th>
         </tr>
     </thead>
@@ -51,7 +54,10 @@
 @foreach (var item in Model.Item2) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => ((DomainCore.InventoryItemEvent)item).EventName)
+                @Html.DisplayFor(modelItem => item.EventName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataAsJson)
             </td>
         </tr>
 }
