@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using DomainCore;
 
 namespace Application.Interfaces
@@ -16,7 +15,7 @@ namespace Application.Interfaces
         // Get one
         Task<InventoryItemDto> GetItemAsync(Guid id);
 
-        Task<IEnumerable<InventoryItemEvent>> InventoryEventsAsync(Guid id);
+        Task<IEnumerable<AInventoryItemEvent>> InventoryEventsAsync(Guid id);
 
 		/* Commands */
 		// Create Item
