@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Commands;
 using Application.Interfaces;
+using Application.EventData;
 using DomainCore;
-using DomainCore.Interfaces;
 using Infrastructure.Data.Interfaces;
 
 namespace Application
@@ -61,39 +61,53 @@ namespace Application
             await _inventoryCommandHandler.Handle(new DeleteInventoryItem(id));
 		}
 
-		public Task PatchItemCountAsync(Guid id, int count, string reason)
+        public async Task PatchItemCountAsync(Guid id, int count, string reason)
         {
-            throw new NotImplementedException();
+            await _inventoryCommandHandler.Handle(
+                new SetInventoryItemCount(id, new SetInventoryItemCountData() { Count = count, Reason = reason })
+            );
         }
 
-        public Task PatchItemNameAsync(Guid id, string name, string reason)
+        public async Task PatchItemNameAsync(Guid id, string name, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+                new SetInventoryItemName(id, new SetInventoryItemNameData() { Name = name, Reason = reason })
+			);
+		}
 
-        public Task PatchItemNoteAsync(Guid id, string note, string reason)
+        public async Task PatchItemNoteAsync(Guid id, string note, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+				new SetInventoryItemNote(id, new SetInventoryItemNoteData() { Note = note, Reason = reason })
+			);
+		}
 
-        public Task IncreaseInventory(Guid id, uint amount, string reason)
+        public async Task IncreaseInventory(Guid id, uint amount, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+                new IncreaseInventoryItemCount(id, new AdjustInventoryItemCount() { Delta = amount, Reason = reason })
+			);
+		}
 
-        public Task DecreaseInventory(Guid id, uint amount, string reason)
+        public async Task DecreaseInventory(Guid id, uint amount, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+				new DecreaseInventoryItemCount(id, new AdjustInventoryItemCount() { Delta = amount, Reason = reason })
+			);
+		}
 
-        public Task ActivateItem(Guid id, string reason)
+        public async Task ActivateItem(Guid id, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+                new ActivateInventoryItem(id, new SetInventoryItemActivation() { Reason = reason })
+			);
+		}
 
-        public Task DisableItem(Guid id, string reason)
+        public async Task DisableItem(Guid id, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+                new DeactivateInventoryItem(id, new SetInventoryItemActivation() { Reason = reason })
+			);
+		}
     }
 }
