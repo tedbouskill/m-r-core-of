@@ -1,4 +1,4 @@
-@model DomainCore.InventoryItemDto
+@model WebApp.Models.EditInventoryItem
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,28 +12,32 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Editable.Id" />
+            <input type="hidden" asp-for="Original.Name" />
+            <input type="hidden" asp-for="Original.IsActive" />
+            <input type="hidden" asp-for="Original.Count" />
+            <input type="hidden" asp-for="Original.Note" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Editable.Name" class="control-label"></label>
+                <input asp-for="Editable.Name" class="form-control" />
+                <span asp-validation-for="Editable.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                        <input asp-for="Editable.IsActive" /> @Html.DisplayNameFor(model => model.Editable.IsActive)
                     </label>
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="Count" class="control-label"></label>
-                <input asp-for="Count" class="form-control" />
-                <span asp-validation-for="Count" class="text-danger"></span>
+                <label asp-for="Editable.Count" class="control-label"></label>
+                <input asp-for="Editable.Count" class="form-control" />
+                <span asp-validation-for="Editable.Count" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Note" class="control-label"></label>
-                <input asp-for="Note" class="form-control" />
-                <span asp-validation-for="Note" class="text-danger"></span>
+                <label asp-for="Editable.Note" class="control-label"></label>
+                <input asp-for="Editable.Note" class="form-control" />
+                <span asp-validation-for="Editable.Note" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
