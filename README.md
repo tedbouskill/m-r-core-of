@@ -53,6 +53,6 @@ It could be used as a solution in production if a company only requires an audit
 
 ### Version4
 
-This version combines Event Sourcing and CQRS.  The command handlers will publish to the Event Store, then the Write Store concurrently.  It will always update the Write Store with the latest aggregate from the Event Store.
+This version combines Event Sourcing and CQRS.  The command handlers will publish to the Event Store, then the Write Store concurrently.  It will always update the Write Store with the latest aggregate from the Event Store. 
 
-__In Progress__
+Although events are published to the command handler using the web controllers, it is possible for an event bus to publish events to the command handler so this version is production ready.
