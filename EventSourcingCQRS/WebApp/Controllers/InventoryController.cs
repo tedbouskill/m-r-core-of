@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using Application.Interfaces;
-
 using DomainCore;
-using DomainCore.Interfaces;
+using WebApp.Models;
 
 namespace WebApp.Controllers
 {
@@ -66,7 +65,7 @@ namespace WebApp.Controllers
         // GET: Inventory/Create
         public IActionResult Create()
         {
-            return View();
+            return View(new InventoryItemDto() { IsActive = false, Count = 0, Note = ""});
         }
 
         // POST: Inventory/Create
@@ -80,6 +79,7 @@ namespace WebApp.Controllers
             {
                 inventoryItem.Id = Guid.NewGuid();
                 inventoryItem.LastEventTimestamp = DateTime.UtcNow;
+                inventoryItem.Note = (inventoryItem.Note ?? "");
 
                 await _inventoryService.PostItemAsync(inventoryItem);
 
@@ -104,7 +104,9 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            return View(inventoryItem);
+            var editInventoryItem = new EditInventoryItem(inventoryItem);
+
+            return View(editInventoryItem);
         }
 
         // POST: Inventory/Edit/5
@@ -112,19 +114,56 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,IsActive,Count,Note")] InventoryItemDto inventoryItem)
+        public async Task<IActionResult> Edit(
+            Guid id,
+            [Bind("Editable,Editable.Id,Editable.Name,Editable.IsActive,Editable.Count,Editable.Note,Original,Original.Name,Original.IsActive,Original.Count,Original.Note")] EditInventoryItem inventoryItem)
         {
-            if (id != inventoryItem.Id)
+            if (id != inventoryItem.Editable.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                await _inventoryService.PutItemAsync(inventoryItem);
+                inventoryItem.Editable.Note = (inventoryItem.Editable.Note ?? "");
+                inventoryItem.Original.Note = (inventoryItem.Original.Note ?? "");
 
-                return RedirectToAction(nameof(Index));
+				int nameChange = Convert.ToInt32(!inventoryItem.Editable.Name.Equals(inventoryItem.Original.Name, StringComparison.Ordinal));
+                int isActiveChange = Convert.ToInt32(inventoryItem.Editable.IsActive != inventoryItem.Original.IsActive);
+                int countDelta = inventoryItem.Editable.Count - inventoryItem.Original.Count;
+                int noteChange = Convert.ToInt32(!inventoryItem.Editable.Note.Equals(inventoryItem.Original.Note, StringComparison.Ordinal));
+
+                // If more than one record changed, update the entire object
+                // NOTE: Because there is one DbContext for this controller, multiple async updates will fail
+                if ((nameChange + isActiveChange + Math.Abs(countDelta) + noteChange) > 1)
+                {
+					await _inventoryService.PutItemAsync(inventoryItem.Editable);
+				}
+                else
+                {
+                    if (nameChange > 0)
+                        await _inventoryService.PatchItemNameAsync(id, inventoryItem.Editable.Name, null);
+                    
+                    if (isActiveChange > 0)
+                    {
+                        if (inventoryItem.Editable.IsActive)
+                            await _inventoryService.ActivateItem(id, null);
+                        else
+                            await _inventoryService.DisableItem(id, null);
+					}
+
+                    if (countDelta < 0)
+                        await _inventoryService.DecreaseInventory(id, (uint)Math.Abs(countDelta), null);
+                    else if (countDelta > 0)
+                        await _inventoryService.IncreaseInventory(id, (uint)countDelta, null);
+
+                    if (noteChange > 0)
+                        await _inventoryService.PatchItemNoteAsync(id, inventoryItem.Editable.Note, null);
+				}
+
+				return RedirectToAction(nameof(Index));
             }
+
             return View(inventoryItem);
         }
 
