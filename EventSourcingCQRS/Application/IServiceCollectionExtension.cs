@@ -1,20 +1,21 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-
-using Application.Interfaces;
-
+﻿using Application.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
 {
-	public static class IServiceCollectionExtension
+    public static class IServiceCollectionExtension
 	{
-		public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        public static IServiceCollection AddApplicationServices(
+            this IServiceCollection services, IConfiguration configuration)
 		{
+
 			// Data Services
 			services.AddDbContext<InventoryDbContext>(options =>
-					options.UseSqlite("Data Source=./inventory.sqlite"));
+					options.UseSqlite(configuration.GetConnectionString("InventoryDbContext")));
 
             services.AddTransient<IInventoryEventRepository, InventoryEventRepository>();
 
