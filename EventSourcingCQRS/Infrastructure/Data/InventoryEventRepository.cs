@@ -49,9 +49,12 @@ namespace Infrastructure.Data
             return _dbContext.InventoryEventItems.Select(i => i.AggregateId == eventModel.AggregateId).Count();
         }
 
-        public Task<int> EventsCountAsync(Guid aggregateId)
+        public async Task<int> EventsCountAsync(Guid aggregateId)
         {
-            throw new NotImplementedException();
+			// Note: This doesn't execute the query so there is no impact on memory
+			IQueryable<InventoryItemEventDto> items = _dbContext.InventoryEventItems.AsQueryable();
+			
+            return await items.Select(i => i.AggregateId == aggregateId).CountAsync();
         }
     }
 }
