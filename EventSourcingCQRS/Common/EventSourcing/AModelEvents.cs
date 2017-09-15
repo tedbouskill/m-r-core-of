@@ -14,9 +14,9 @@ namespace Common.EventSourcing
         /// <summary>
         /// An event store capable of storing a set of events using one key in the order events are added
         /// </summary>
-        private IEventStore<IdT> _eventStore;
+        protected IEventStore<IdT> _eventStore;
 
-        private IdT _aggregateId;
+        protected IdT _aggregateId;
 
         public AModelEvents(IEventStore<IdT> eventStore, IdT aggregateId)
         {
