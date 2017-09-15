@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Common.EventSourcing;
+using DomainCore;
 
 using Infrastructure.Data.Interfaces;
 
@@ -17,9 +18,21 @@ namespace Application
         {
         }
 
-        public override Task<ModelAggregate<Guid>> ModelAsync()
+        public override async Task<ModelAggregate<Guid>> ModelAsync()
         {
-            throw new NotImplementedException();
+            InventoryItemAggregate iia = new InventoryItemAggregate()
+            {
+                AggregateId = _aggregateId,
+                EventModelRow = 1
+            };
+
+            foreach (AInventoryItemEvent eventItem in await _eventStore.EventsAsync(_aggregateId))
+            {
+                iia.EventModelRow++;
+                eventItem.ApplyEventData(iia);
+            }
+
+            return iia;
         }
 	}
 }
