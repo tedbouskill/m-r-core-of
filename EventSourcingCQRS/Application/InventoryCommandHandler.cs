@@ -23,22 +23,44 @@ namespace Application
             _inventoryWriteRepository = inventoryWriteRepository;
         }
 
-        public async Task Handle(CreateInventoryItem createInventoryItem)
+        private async Task _HandleUpdate(AInventoryItemEvent command)
         {
-			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, createInventoryItem.AggregateId);
+			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, command.AggregateId);
 
-            // ToDo: Add check for duplicate create of inventory item
+			// ToDo: Cache aggregate and attempt to update rather than regenerate
+			InventoryItemAggregate iia = (InventoryItemAggregate)await iie.ModelAsync();
 
-			var eventData = ((CreateInventoryItemData)createInventoryItem.EventData).InventoryItemData;
+			command.ApplyEventData(iia);
+
+			await Task.WhenAll(
+				iie.AppendEventAsync((IModelEvent<Guid>)command),
+				_inventoryWriteRepository.UpdateAsync(
+					command.AggregateId,
+					new InventoryItemDto(iia)
+			));
+		}
+
+        public async Task Handle(ActivateInventoryItem command)
+		{
+            await _HandleUpdate(command);
+		}
+
+		public async Task Handle(CreateInventoryItem command)
+        {
+			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, command.AggregateId);
+
+            // ToDo: Add check for duplicate create of inventory item?
+
+			var eventData = ((CreateInventoryItemData)command.EventData).InventoryItemData;
 
             await Task.WhenAll(
-                iie.AppendEventAsync((IModelEvent<Guid>)createInventoryItem),
+                iie.AppendEventAsync((IModelEvent<Guid>)command),
                 _inventoryWriteRepository.AppendAsync(
-                    createInventoryItem.AggregateId,
+                    command.AggregateId,
                     new InventoryItemDto()
                     {
-                        Id = createInventoryItem.AggregateId,
-                        LastEventTimestamp = createInventoryItem.Timestamp,
+                        Id = command.AggregateId,
+                        LastEventTimestamp = command.Timestamp,
                         Name = eventData.Name,
                         IsActive = eventData.IsActive,
                         Count = eventData.Count,
@@ -47,38 +69,52 @@ namespace Application
             ));
 		}
 
-		public async Task Handle(DeleteInventoryItem deleteInventoryItem)
+		public async Task Handle(DeleteInventoryItem command)
 		{
-            InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, deleteInventoryItem.AggregateId);
+            InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, command.AggregateId);
+
+            // ToDo: Cache aggregate and attempt to update rather than regenerate
+			InventoryItemAggregate iia = (InventoryItemAggregate)await iie.ModelAsync();
 
 			await Task.WhenAll(
-                iie.AppendEventAsync((IModelEvent<Guid>)deleteInventoryItem)
-                ,_inventoryWriteRepository.DeleteAsync(deleteInventoryItem.AggregateId)
+                iie.AppendEventAsync((IModelEvent<Guid>)command)
+                ,_inventoryWriteRepository.DeleteAsync(command.AggregateId)
 			);
 		}
 
-        public async Task Handle(UpdateInventoryItem updateInventoryItem)
+        public async Task Handle(DeactivateInventoryItem command)
+        {
+            await _HandleUpdate(command);
+		}
+
+        public async Task Handle(DecreaseInventoryItemCount command)
+        {
+			await _HandleUpdate(command);
+		}
+
+        public async Task Handle(IncreaseInventoryItemCount command)
+        {
+			await _HandleUpdate(command);
+		}
+
+        public async Task Handle(SetInventoryItemCount command)
+        {
+			await _HandleUpdate(command);
+		}
+
+        public async Task Handle(SetInventoryItemName command)
+        {
+			await _HandleUpdate(command);
+		}
+
+        public async Task Handle(SetInventoryItemNote command)
+        {
+			await _HandleUpdate(command);
+		}
+
+		public async Task Handle(UpdateInventoryItem command)
 		{
-            InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, updateInventoryItem.AggregateId);
-
-            // ToDo: Add check to ensure inventory item already exists
-
-			var eventData = ((UpdateInventoryItemData)updateInventoryItem.EventData).InventoryItemData;
-
-			await Task.WhenAll(
-                iie.AppendEventAsync((IModelEvent<Guid>)updateInventoryItem),
-                _inventoryWriteRepository.UpdateAsync(
-					updateInventoryItem.AggregateId,
-					new InventoryItemDto()
-					{
-						Id = updateInventoryItem.AggregateId,
-						LastEventTimestamp = updateInventoryItem.Timestamp,
-						Name = eventData.Name,
-						IsActive = eventData.IsActive,
-						Count = eventData.Count,
-						Note = eventData.Note
-					}
-			));
+			await _HandleUpdate(command);
 		}
 	}
 }
