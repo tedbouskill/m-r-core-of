@@ -1,4 +1,4 @@
-@model DomainCore.InventoryItem
+@model DomainCore.InventoryItemDto
 
 @{
     ViewData["Title"] = "Details";
@@ -33,6 +33,12 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Note)
+        </dd>
+        <dt>
+            Last Event Date Time
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastEventTimestamp)
         </dd>
     </dl>
 </div>

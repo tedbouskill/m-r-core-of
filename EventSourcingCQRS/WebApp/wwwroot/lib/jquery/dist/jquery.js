@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * jQuery JavaScript Library v2.2.0
  * http://jquery.com/
  *
@@ -3956,7 +3956,7 @@ jQuery.fn.extend( {
 		}
 
 		return access( this, function( value ) {
-			var data, camelKey;
+			var data, camelId;
 
 			// The calling jQuery object (element matches) is not empty
 			// (and therefore has an element appears at this[ 0 ]) and the
@@ -3977,18 +3977,18 @@ jQuery.fn.extend( {
 					return data;
 				}
 
-				camelKey = jQuery.camelCase( key );
+				camelId = jQuery.camelCase( key );
 
 				// Attempt to get data from the cache
 				// with the key camelized
-				data = dataUser.get( elem, camelKey );
+				data = dataUser.get( elem, camelId );
 				if ( data !== undefined ) {
 					return data;
 				}
 
 				// Attempt to "discover" the data in
 				// HTML5 custom data-* attrs
-				data = dataAttr( elem, camelKey, undefined );
+				data = dataAttr( elem, camelId, undefined );
 				if ( data !== undefined ) {
 					return data;
 				}
@@ -3998,17 +3998,17 @@ jQuery.fn.extend( {
 			}
 
 			// Set the data...
-			camelKey = jQuery.camelCase( key );
+			camelId = jQuery.camelCase( key );
 			this.each( function() {
 
 				// First, attempt to store a copy or reference of any
 				// data that might've been store with a camelCased key.
-				var data = dataUser.get( this, camelKey );
+				var data = dataUser.get( this, camelId );
 
 				// For HTML5 data-* attribute interop, we have to
 				// store property names with dashes in a camelCase form.
 				// This might not apply to all properties...*
-				dataUser.set( this, camelKey, value );
+				dataUser.set( this, camelId, value );
 
 				// *... In the case of properties that might _actually_
 				// have dashes, we need to also store a copy of that
@@ -4800,9 +4800,9 @@ jQuery.event = {
 		return handlerQueue;
 	},
 
-	// Includes some event props shared by KeyEvent and MouseEvent
-	props: ( "altKey bubbles cancelable ctrlKey currentTarget detail eventPhase " +
-		"metaKey relatedTarget shiftKey target timeStamp view which" ).split( " " ),
+	// Includes some event props shared by IdEvent and MouseEvent
+	props: ( "altId bubbles cancelable ctrlId currentTarget detail eventPhase " +
+		"metaId relatedTarget shiftId target timeStamp view which" ).split( " " ),
 
 	fixHooks: {},
 
@@ -8306,7 +8306,7 @@ jQuery.extend( {
 		},
 
 		// Data converters
-		// Keys separate source (or catchall "*") and destination types with a single space
+		// Ids separate source (or catchall "*") and destination types with a single space
 		converters: {
 
 			// Convert anything to text

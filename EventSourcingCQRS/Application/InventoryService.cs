@@ -1,120 +1,113 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-
+using Application.Commands;
+using Application.Interfaces;
+using Application.EventData;
 using DomainCore;
 using Infrastructure.Data.Interfaces;
 
 namespace Application
 {
-    public class InventoryService : Interfaces.IInventoryService
+    public class InventoryService : IInventoryService
     {
-        private IInventoryRepository _inventoryRepository;
+        private IInventoryReadRepository _inventoryReadRepository;
         private IInventoryEventRepository _inventoryEventRepository;
+        private IInventoryCommandHandler _inventoryCommandHandler;
 
-        public InventoryService(IInventoryRepository inventoryRepository, IInventoryEventRepository inventoryEventRepository)
+        public InventoryService(
+            IInventoryReadRepository inventoryReadRepository,
+            IInventoryEventRepository inventoryEventRepository,
+            IInventoryCommandHandler inventoryCommandHandler
+        )
         {
-            _inventoryRepository = inventoryRepository;
+            _inventoryReadRepository = inventoryReadRepository;
             _inventoryEventRepository = inventoryEventRepository;
+            _inventoryCommandHandler = inventoryCommandHandler;
         }
 
-		public async Task<IEnumerable<InventoryItem>> InventoryAsync()
+		public async Task<IEnumerable<InventoryItemDto>> InventoryAsync()
 		{
-			return await _inventoryRepository.InventoryAsync();
+			return await _inventoryReadRepository.AllAsync();
 		}
 
-		public async Task<InventoryItem> GetItemAsync(Guid id)
+		public async Task<InventoryItemDto> GetItemAsync(Guid id)
 		{
-            return await _inventoryRepository.ItemAsync(id);
+            return await _inventoryReadRepository.ModelAsync(id);
 		}
 
-        public async Task PostItemAsync(InventoryItem item)
-		{
-            await Task.WhenAll(
-                _inventoryEventRepository.AppendEvent(
-                        item.Id,
-                        new InventoryItemEvent()
-                        {
-                            AggregateKey = item.Id,
-                            TimeStamp = DateTime.UtcNow,
-                            Event = "CreateInventoryItem",
-                            EventObjTypeName = "InventoryItem",
-                            EventObjJson = Newtonsoft.Json.JsonConvert.SerializeObject(item)
-                        }
-                    ),
-                _inventoryRepository.AddAsync(item)
-            );
-		}
-
-        public async Task PutItemAsync(InventoryItem item)
+        public async Task<IEnumerable<AInventoryItemEvent>> InventoryEventsAsync(Guid id)
         {
-            await Task.WhenAll(
-                _inventoryEventRepository.AppendEvent(
-                        item.Id,
-                        new InventoryItemEvent()
-                        {
-                            AggregateKey = item.Id,
-                            TimeStamp = DateTime.UtcNow,
-                            Event = "UpdateFullInventoryItem",
-                            EventObjTypeName = "InventoryItem",
-                            EventObjJson = Newtonsoft.Json.JsonConvert.SerializeObject(item)
-                        }
-                    ),
-                _inventoryRepository.UpdateAsync(item)
-            );
-        }
+			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, id);
+
+            var result = iie.EventsAsync().Result;
+
+            return await Task.FromResult(result.Cast<AInventoryItemEvent>());
+		}
+
+		public async Task PostItemAsync(InventoryItemDto item)
+		{
+            await _inventoryCommandHandler.Handle(new CreateInventoryItem(item));
+		}
+
+        public async Task PutItemAsync(InventoryItemDto item)
+        {
+            await _inventoryCommandHandler.Handle(new UpdateInventoryItem(item));
+		}
 
 		public async Task DeleteItemAsync(Guid id)
 		{
-            await Task.WhenAll(
-                _inventoryEventRepository.AppendEvent(
-                        id,
-                        new InventoryItemEvent()
-                        {
-                            AggregateKey = id,
-                            TimeStamp = DateTime.UtcNow,
-                            Event = "DeleteInventoryItem",
-                            EventObjTypeName = "Guid",
-                            EventObjJson = Newtonsoft.Json.JsonConvert.SerializeObject(id)
-                        }
-                    ),
-                _inventoryRepository.DeleteAsync(id)
-            );
+            await _inventoryCommandHandler.Handle(new DeleteInventoryItem(id));
 		}
 
-		public Task PatchItemCountAsync(Guid id, int count, string reason)
+        public async Task PatchItemCountAsync(Guid id, int count, string reason)
         {
-            throw new NotImplementedException();
+            await _inventoryCommandHandler.Handle(
+                new SetInventoryItemCount(id, new SetInventoryItemCountData() { Count = count, Reason = reason })
+            );
         }
 
-        public Task PatchItemNameAsync(Guid id, string name, string reason)
+        public async Task PatchItemNameAsync(Guid id, string name, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+                new SetInventoryItemName(id, new SetInventoryItemNameData() { Name = name, Reason = reason })
+			);
+		}
 
-        public Task PatchItemNoteAsync(Guid id, string note, string reason)
+        public async Task PatchItemNoteAsync(Guid id, string note, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+				new SetInventoryItemNote(id, new SetInventoryItemNoteData() { Note = note, Reason = reason })
+			);
+		}
 
-        public Task IncreaseInventory(Guid id, uint amount, string reason)
+        public async Task IncreaseInventory(Guid id, uint amount, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+                new IncreaseInventoryItemCount(id, new AdjustInventoryItemCount() { Delta = amount, Reason = reason })
+			);
+		}
 
-        public Task DecreaseInventory(Guid id, uint amount, string reason)
+        public async Task DecreaseInventory(Guid id, uint amount, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+				new DecreaseInventoryItemCount(id, new AdjustInventoryItemCount() { Delta = amount, Reason = reason })
+			);
+		}
 
-        public Task ActivateItem(Guid id, string reason)
+        public async Task ActivateItem(Guid id, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+                new ActivateInventoryItem(id, new SetInventoryItemActivation() { Reason = reason })
+			);
+		}
 
-        public Task DisableItem(Guid id, string reason)
+        public async Task DisableItem(Guid id, string reason)
         {
-            throw new NotImplementedException();
-        }
+			await _inventoryCommandHandler.Handle(
+                new DeactivateInventoryItem(id, new SetInventoryItemActivation() { Reason = reason })
+			);
+		}
     }
 }

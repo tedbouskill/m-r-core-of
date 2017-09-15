@@ -8,13 +8,13 @@ namespace Infrastructure.Data.Interfaces
 {
     public interface IInventoryRepository
     {
-		Task<IEnumerable<InventoryItem>> InventoryAsync();
+		Task<IEnumerable<InventoryItemDto>> InventoryAsync();
 
-        Task<InventoryItem> ItemAsync(Guid id);
+        Task<InventoryItemDto> ItemAsync(Guid id);
 
-        Task AddAsync(InventoryItem inventoryItem);
+        Task AddAsync(InventoryItemDto inventoryItem);
 
-        Task UpdateAsync(InventoryItem inventoryItem);
+        Task UpdateAsync(InventoryItemDto inventoryItem);
 
 		Task DeleteAsync(Guid Id);
     }

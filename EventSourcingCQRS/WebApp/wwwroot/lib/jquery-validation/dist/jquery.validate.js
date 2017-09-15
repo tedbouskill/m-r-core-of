@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * jQuery Validation Plugin v1.14.0
  *
  * http://jqueryvalidation.org/
@@ -281,12 +281,12 @@ $.extend( $.validator, {
 			// Insert      => 45
 			// Num lock    => 144
 			// AltGr key   => 225
-			var excludedKeys = [
+			var excludedIds = [
 				16, 17, 18, 20, 35, 36, 37,
 				38, 39, 40, 45, 144, 225
 			];
 
-			if ( event.which === 9 && this.elementValue( element ) === "" || $.inArray( event.keyCode, excludedKeys ) !== -1 ) {
+			if ( event.which === 9 && this.elementValue( element ) === "" || $.inArray( event.keyCode, excludedIds ) !== -1 ) {
 				return;
 			} else if ( element.name in this.submitted || element === this.lastElement ) {
 				this.element( element );

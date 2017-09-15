@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DomainCore;
 
 namespace Application.Interfaces
 {
@@ -9,17 +10,19 @@ namespace Application.Interfaces
     {
         /* ReadModel  */
         // Get all
-        Task<IEnumerable<DomainCore.InventoryItem>> InventoryAsync();
+        Task<IEnumerable<InventoryItemDto>> InventoryAsync();
 
         // Get one
-        Task<DomainCore.InventoryItem> GetItemAsync(Guid id);
+        Task<InventoryItemDto> GetItemAsync(Guid id);
 
-        /* Commands */
-        // Create Item
-        Task PostItemAsync(DomainCore.InventoryItem item);
+        Task<IEnumerable<AInventoryItemEvent>> InventoryEventsAsync(Guid id);
+
+		/* Commands */
+		// Create Item
+		Task PostItemAsync(InventoryItemDto item);
 
         // Update Full Item
-		Task PutItemAsync(DomainCore.InventoryItem item);
+		Task PutItemAsync(InventoryItemDto item);
 
         // Delete Item
         Task DeleteItemAsync(Guid id);

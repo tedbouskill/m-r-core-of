@@ -27,4 +27,9 @@
     <Compile Remove="Migrations\20170904051939_testMigration.cs" />
     <Compile Remove="Migrations\MvcInventoryContextModelSnapshot.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Data\inventory.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
