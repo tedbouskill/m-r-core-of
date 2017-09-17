@@ -10,9 +10,9 @@ namespace Infrastructure.Data
 {
     public class InventoryWriteRepository : Interfaces.IInventoryWriteRepository
     {
-		private readonly InventoryDbContext _dbContext;
+		private readonly InventoryItemsWriteDbContext _dbContext;
 
-		public InventoryWriteRepository(InventoryDbContext dbContext)
+		public InventoryWriteRepository(InventoryItemsWriteDbContext dbContext)
 		{
 			_dbContext = dbContext;
 		}

@@ -13,20 +13,30 @@ namespace Application
             this IServiceCollection services, IConfiguration configuration)
 		{
 
-			// Data Services
-			services.AddDbContext<InventoryDbContext>(options =>
+			// DbContexts
+			services.AddDbContext<InventoryItemsDbContext>(options =>
+					options.UseSqlite(configuration.GetConnectionString("InventoryDbContext")));
+			
+            services.AddDbContext<InventoryItemsReadDbContext>(options =>
+					options.UseSqlite(configuration.GetConnectionString("InventoryDbContext")));
+			services.AddDbContext<InventoryItemsWriteDbContext>(options =>
+		            options.UseSqlite(configuration.GetConnectionString("InventoryDbContext")));
+			
+            services.AddDbContext<InventoryEventsDbContext>(options =>
 					options.UseSqlite(configuration.GetConnectionString("InventoryDbContext")));
 
-            services.AddTransient<IInventoryEventRepository, InventoryEventRepository>();
+            // Repositories
+			services.AddScoped<IInventoryEventRepository, InventoryEventRepository>();
 
-			services.AddTransient<IInventoryReadRepository, InventoryReadRepository>();
-			services.AddTransient<IInventoryWriteRepository, InventoryWriteRepository>();
+			services.AddScoped<IInventoryReadRepository, InventoryReadRepository>();
+			services.AddScoped<IInventoryWriteRepository, InventoryWriteRepository>();
 
-			services.AddTransient<IInventoryRepository, InventoryRepository>();
+			services.AddScoped<IInventoryRepository, InventoryRepository>();
 
-            services.AddTransient<IInventoryCommandHandler, InventoryCommandHandler>();
+            // Services
+            services.AddScoped<IInventoryCommandHandler, InventoryCommandHandler>();
 
-            services.AddTransient<IInventoryService, InventoryService>();
+            services.AddScoped<IInventoryService, InventoryService>();
 
 			return services;
 		}

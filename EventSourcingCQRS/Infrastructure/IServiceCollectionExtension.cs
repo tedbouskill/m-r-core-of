@@ -1,17 +1,36 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Infrastructure.Data;
+using Infrastructure.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure
 {
-	public static class IServiceCollectionExtension
+    public static class IServiceCollectionExtension
 	{
-		public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+		public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
 		{
-            // Data Services
-			services.AddDbContext<InventoryDbContext>(options =>
-					options.UseSqlite("Data Source=./inventory.sqlite"));
+			// DbContexts
+			services.AddDbContext<InventoryItemsDbContext>(options =>
+					options.UseSqlite(configuration.GetConnectionString("InventoryDbContext")));
 
-            return services;
+			services.AddDbContext<InventoryItemsReadDbContext>(options =>
+					options.UseSqlite(configuration.GetConnectionString("InventoryDbContext")));
+			services.AddDbContext<InventoryItemsWriteDbContext>(options =>
+					options.UseSqlite(configuration.GetConnectionString("InventoryDbContext")));
+
+			services.AddDbContext<InventoryEventsDbContext>(options =>
+					options.UseSqlite(configuration.GetConnectionString("InventoryDbContext")));
+
+            // Repositories
+			services.AddScoped<IInventoryEventRepository, InventoryEventRepository>();
+
+			services.AddScoped<IInventoryReadRepository, InventoryReadRepository>();
+			services.AddScoped<IInventoryWriteRepository, InventoryWriteRepository>();
+
+			services.AddScoped<IInventoryRepository, InventoryRepository>();
+
+			return services;
 		}
 	}
 }

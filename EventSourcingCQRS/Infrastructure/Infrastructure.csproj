@@ -17,6 +17,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Data\DbContexts\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Events\Interfaces\IEventBusService.cs" />

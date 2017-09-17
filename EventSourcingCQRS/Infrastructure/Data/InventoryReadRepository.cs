@@ -11,9 +11,9 @@ namespace Infrastructure.Data
 {
     public class InventoryReadRepository : Interfaces.IInventoryReadRepository
     {
-		private readonly InventoryDbContext _dbContext;
+		private readonly InventoryItemsReadDbContext _dbContext;
 
-		public InventoryReadRepository(InventoryDbContext dbContext)
+		public InventoryReadRepository(InventoryItemsReadDbContext dbContext)
         {
             _dbContext = dbContext;
         }

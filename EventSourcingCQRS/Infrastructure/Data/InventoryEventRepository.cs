@@ -12,9 +12,9 @@ namespace Infrastructure.Data
 {
     public class InventoryEventRepository : IInventoryEventRepository
     {
-		private readonly InventoryDbContext _dbContext;
+		private readonly InventoryEventsDbContext _dbContext;
 
-		public InventoryEventRepository(InventoryDbContext dbContext)
+		public InventoryEventRepository(InventoryEventsDbContext dbContext)
         {
             _dbContext = dbContext;
         }
