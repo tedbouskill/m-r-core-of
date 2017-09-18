@@ -9,6 +9,11 @@ using Infrastructure.Data.Interfaces;
 
 namespace Application
 {
+    public class DuplicateAggregateException : Exception
+    {
+        public DuplicateAggregateException(string message) : base(message) {}
+    }
+
     public class InventoryCommandHandler : IInventoryCommandHandler
 	{
 		private IInventoryEventRepository _inventoryEventRepository;
@@ -49,9 +54,12 @@ namespace Application
         {
 			InventoryItemEvents iie = new InventoryItemEvents(_inventoryEventRepository, command.AggregateId);
 
-            // ToDo: Add check for duplicate create of inventory item?
-
 			var eventData = ((CreateInventoryItemData)command.EventData).InventoryItemData;
+
+            if (await iie.ModelEventsCountAsync(command.AggregateId) > 0)
+            //if (await _inventoryEventRepository.ModelEventsCountAsync(command.AggregateId) > 0)
+                throw new DuplicateAggregateException(
+                    string.Format("AggregateId {0} already created an inventory item.", command.AggregateId));
 
             await Task.WhenAll(
                 iie.AppendEventAsync((IModelEvent<Guid>)command),
