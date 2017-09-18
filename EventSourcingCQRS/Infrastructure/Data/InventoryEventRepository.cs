@@ -19,7 +19,15 @@ namespace Infrastructure.Data
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<IModelEvent<Guid>>> EventsAsync(Guid aggregateId)
+		public async Task<int> ModelEventsCountAsync(Guid aggregateId)
+		{
+			// Note: This doesn't execute the query so there is no impact on memory
+			IQueryable<InventoryItemEventDto> items = _dbContext.InventoryEventItems.AsQueryable();
+
+            return await items.Select(i => i.AggregateId == aggregateId).CountAsync();
+        }
+
+		public async Task<IEnumerable<IModelEvent<Guid>>> EventsAsync(Guid aggregateId)
 		{
 			var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 			
@@ -34,13 +42,14 @@ namespace Infrastructure.Data
         public async Task<int> AppendEventAsync(IModelEvent<Guid> eventModel)
         {
 			var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+            var eventObjJson = JsonConvert.SerializeObject(eventModel, typeof(object), settings);
 
 		    await _dbContext.InventoryEventItems.AddAsync(
                     new InventoryItemEventDto() {
                         AggregateId = eventModel.AggregateId,
                         Timestamp = eventModel.Timestamp,
                         EventName = eventModel.EventName,
-                        EventObjJson = JsonConvert.SerializeObject(eventModel, typeof(object), settings)
+                        EventObjJson = eventObjJson
                     }
                 );
 

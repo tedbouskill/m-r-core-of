@@ -18,6 +18,14 @@ namespace Infrastructure.Data
             _dbContext = dbContext;
         }
 
+        public async Task<int> ModelsCountAsync()
+		{
+			// Note: This doesn't execute the query so there is no impact on memory
+			IQueryable<InventoryItemDto> items = _dbContext.InventoryItems.AsQueryable();
+
+            return await items.CountAsync();
+		}
+		
         public async Task<IEnumerable<InventoryItemDto>> AllAsync()
         {
             return await _dbContext.InventoryItems.ToListAsync();
@@ -27,5 +35,5 @@ namespace Infrastructure.Data
         {
 			return await _dbContext.InventoryItems.SingleOrDefaultAsync(m => m.Id == id);
         }
-	}
+    }
 }

@@ -29,12 +29,17 @@ namespace Common.EventSourcing
             return await _eventStore.EventsAsync(_aggregateId);
         }
 
-        /// <summary>
-        /// Appends the event model
-        /// </summary>
-        /// <returns>The aggregate model</returns>
-        /// <param name="eventModel">Event source model.</param>
-        public async Task<int> AppendEventAsync(IModelEvent<IdT> eventModel)
+		public async Task<int> ModelEventsCountAsync(IdT id)
+		{
+            return await _eventStore.ModelEventsCountAsync(id);
+		}
+
+		/// <summary>
+		/// Appends the event model
+		/// </summary>
+		/// <returns>The aggregate model</returns>
+		/// <param name="eventModel">Event source model.</param>
+		public async Task<int> AppendEventAsync(IModelEvent<IdT> eventModel)
         {
             return await _eventStore.AppendEventAsync(eventModel);
         }

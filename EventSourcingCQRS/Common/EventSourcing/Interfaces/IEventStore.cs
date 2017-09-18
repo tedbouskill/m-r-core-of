@@ -13,7 +13,9 @@ namespace Common.EventSourcing.Interfaces
     {
         Task<int> EventsCountAsync(IdT aggregateId);
 
-		//Task<IEnumerable<IdT>> AllIdsSync();
+        //Task<IEnumerable<IdT>> AllIdsSync();
+
+        Task<int> ModelEventsCountAsync(IdT aggregateId);
 
 		Task<IEnumerable<IModelEvent<IdT>>> EventsAsync(IdT aggregateId);
 

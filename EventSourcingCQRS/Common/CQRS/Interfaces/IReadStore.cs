@@ -9,6 +9,8 @@ namespace Common.CQRS.Interfaces
     /// </summary>
     public interface IReadStore<IdType, ModelType>
     {
+        Task<int> ModelsCountAsync();
+
         Task<IEnumerable<ModelType>> AllAsync();
 
         Task<ModelType> ModelAsync(IdType id);
