@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{48A371CF-BB87-4261-89DF-F3346A5785AF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{69EFE354-1F98-4CDD-905E-6B630377534C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{0DB6C4FA-AD3E-4257-BCD4-111B1A74DE44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,10 @@ Global
 		{48A371CF-BB87-4261-89DF-F3346A5785AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48A371CF-BB87-4261-89DF-F3346A5785AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48A371CF-BB87-4261-89DF-F3346A5785AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DB6C4FA-AD3E-4257-BCD4-111B1A74DE44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DB6C4FA-AD3E-4257-BCD4-111B1A74DE44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DB6C4FA-AD3E-4257-BCD4-111B1A74DE44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DB6C4FA-AD3E-4257-BCD4-111B1A74DE44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
@@ -66,5 +74,8 @@ Global
 		$8.scope = text/x-cshtml
 		$0.StandardHeader = $9
 		$0.VersionControlPolicy = $10
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0DB6C4FA-AD3E-4257-BCD4-111B1A74DE44} = {69EFE354-1F98-4CDD-905E-6B630377534C}
 	EndGlobalSection
 EndGlobal
