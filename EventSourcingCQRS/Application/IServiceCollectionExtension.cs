@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Data.Interfaces;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,26 @@ namespace Application
         public static IServiceCollection AddApplicationServices(
             this IServiceCollection services, IConfiguration configuration)
 		{
+
+			var itemsOptions = new DbContextOptionsBuilder<InventoryItemsDbContext>()
+				.UseSqlite(new SqliteConnection(configuration.GetConnectionString("InventoryDbContext")))
+				.Options;
+
+			// Create the schema in the database
+			using (var dbContext = new InventoryItemsDbContext(itemsOptions))
+			{
+				dbContext.Database.EnsureCreated();
+			}
+
+            var eventsOptions = new DbContextOptionsBuilder<InventoryEventsDbContext>()
+            	.UseSqlite(new SqliteConnection(configuration.GetConnectionString("InventoryDbContext")))
+            	.Options;
+
+			// Create the schema in the database
+            using(var dbContext = new InventoryEventsDbContext(eventsOptions))
+            {
+				dbContext.Database.EnsureCreated();
+			}
 
 			// DbContexts
 			services.AddDbContext<InventoryItemsDbContext>(options =>
