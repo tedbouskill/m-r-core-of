@@ -3,7 +3,9 @@
 This repository was created to modernize Gregory Young's C# example of [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) and [CQRS](https://martinfowler.com/bliki/CQRS.html) on GitHub
 [SimpleCQRS](https://github.com/gregoryyoung/m-r/tree/master/SimpleCQRS)
 
-**NOTE: This project is using .NET Core 2.x on a Mac so be sure to have it installed and available.**
+### Installation Notes
+
+This project was developed on a Mac using Visual Studio 2017 with .NET Core 2.x, however, it has been cloned and successfully built on Windows using Visual Studio with the .NET Core Cross Platform tools installed as well as the .NET Core 2.x SDK.
 
 ## Background
 
