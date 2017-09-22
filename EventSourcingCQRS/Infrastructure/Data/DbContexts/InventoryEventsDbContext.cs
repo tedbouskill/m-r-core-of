@@ -10,7 +10,7 @@ public class InventoryEventsDbContext : DbContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		modelBuilder.Entity<DomainCore.InventoryItemEventDto>()
+        modelBuilder.Entity<DomainCore.InventoryItemEventDto>()
                     .ToTable("InventoryItemEvents")
                     .HasKey(o => new { o.AggregateId, o.Timestamp });
 	}

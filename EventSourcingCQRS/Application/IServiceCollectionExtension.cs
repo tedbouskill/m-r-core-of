@@ -13,26 +13,17 @@ namespace Application
         public static IServiceCollection AddApplicationServices(
             this IServiceCollection services, IConfiguration configuration)
 		{
-
-			var itemsOptions = new DbContextOptionsBuilder<InventoryItemsDbContext>()
-				.UseSqlite(new SqliteConnection(configuration.GetConnectionString("InventoryDbContext")))
-				.Options;
-
-			// Create the schema in the database
-			using (var dbContext = new InventoryItemsDbContext(itemsOptions))
-			{
-				dbContext.Database.EnsureCreated();
-			}
-
-            var eventsOptions = new DbContextOptionsBuilder<InventoryEventsDbContext>()
-            	.UseSqlite(new SqliteConnection(configuration.GetConnectionString("InventoryDbContext")))
-            	.Options;
-
-			// Create the schema in the database
-            using(var dbContext = new InventoryEventsDbContext(eventsOptions))
             {
-				dbContext.Database.EnsureCreated();
-			}
+                var options = new DbContextOptionsBuilder<InventoryDbContext>()
+                    .UseSqlite(new SqliteConnection(configuration.GetConnectionString("InventoryDbContext")))
+                    .Options;
+
+                // Create the schema in the database
+                using (var dbContext = new InventoryDbContext(options))
+                {
+                    dbContext.Database.EnsureCreated();
+                }
+            }
 
 			// DbContexts
 			services.AddDbContext<InventoryItemsDbContext>(options =>
