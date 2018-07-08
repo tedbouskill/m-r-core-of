@@ -56,8 +56,7 @@ namespace Application
 
 			var eventData = ((CreateInventoryItemData)command.EventData).InventoryItemData;
 
-            if (await iie.ModelEventsCountAsync(command.AggregateId) > 0)
-            //if (await _inventoryEventRepository.ModelEventsCountAsync(command.AggregateId) > 0)
+            if (await _inventoryEventRepository.ModelEventsCountAsync(command.AggregateId) > 0)
                 throw new DuplicateAggregateException(
                     string.Format("AggregateId {0} already created an inventory item.", command.AggregateId));
 

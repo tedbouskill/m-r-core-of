@@ -24,7 +24,7 @@ namespace Infrastructure.Data
 			// Note: This doesn't execute the query so there is no impact on memory
 			IQueryable<InventoryItemEventDto> items = _dbContext.InventoryEventItems.AsQueryable();
 
-            return await items.Select(i => i.AggregateId == aggregateId).CountAsync();
+            return await items.Where(i => i.AggregateId == aggregateId).CountAsync();
         }
 
 		public async Task<IEnumerable<IModelEvent<Guid>>> EventsAsync(Guid aggregateId)
@@ -63,7 +63,7 @@ namespace Infrastructure.Data
 			// Note: This doesn't execute the query so there is no impact on memory
 			IQueryable<InventoryItemEventDto> items = _dbContext.InventoryEventItems.AsQueryable();
 			
-            return await items.Select(i => i.AggregateId == aggregateId).CountAsync();
+            return await items.Where(i => i.AggregateId == aggregateId).CountAsync();
         }
     }
 }
