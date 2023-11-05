@@ -19,12 +19,13 @@ namespace WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
 
             services.AddApplicationServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        [System.Obsolete]
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -38,7 +39,7 @@ namespace WebApp
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
+            _ = app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",

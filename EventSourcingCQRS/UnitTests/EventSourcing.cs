@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Application;
 using Application.Commands;
 using Application.EventData;
 using DomainCore;
@@ -25,7 +24,7 @@ namespace Application
 
             // Create the schema in the database
             var dbEventsContext = new InventoryEventsDbContext(eventsOptions);
-            dbEventsContext.Database.EnsureCreated();
+            _ = dbEventsContext.Database.EnsureCreated();
 
             return new InventoryEventRepository(dbEventsContext);
         }
@@ -68,7 +67,7 @@ namespace Application
             };
 
             // Create Inventory Item
-            await InvokeInventoryEventRepository().AppendEventAsync(new CreateInventoryItem(item));
+            _ = await InvokeInventoryEventRepository().AppendEventAsync(new CreateInventoryItem(item));
 
             // Activate
             await InvokeInventoryEventRepository().AppendEventAsync(new ActivateInventoryItem(id, new SetInventoryItemActivation()));
