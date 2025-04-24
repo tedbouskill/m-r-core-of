@@ -9,7 +9,7 @@ using DomainCore;
 
 namespace Infrastructure.Data
 {
-    public class InventoryReadRepository : Interfaces.IInventoryReadRepository
+    internal class InventoryReadRepository : Interfaces.IInventoryReadRepository
     {
 		private readonly InventoryItemsReadDbContext _dbContext;
 
